@@ -73,10 +73,24 @@ test('each preview scheme has a result, matching detail page view and checklist'
   assert.deepEqual(options.map((node) => attribute(node, 'value')), ids);
 });
 
-test('the preview offers no form submissions, uploads, fake verifications or backend key', () => {
+test('only the scholarship check sends answers, to the same-origin API', () => {
+  for (const [page, { nodes }] of Object.entries(compiled)) {
+    const forms = nodes.filter((node) => node.tagName === 'form');
+    assert.equal(forms.length, page === 'assistant' ? 1 : 0, page);
+    if (page === 'assistant') {
+      assert.equal(attribute(forms[0], 'method'), 'post');
+      assert.equal(attribute(forms[0], 'action'), '/api/scholarship');
+      const fields = select(nodes, 'data-pilot-fields');
+      assert.equal(fields.length, 1);
+      assert.notEqual(attribute(fields[0], 'disabled'), undefined, 'Keep the form disabled until the API loads');
+    }
+  }
+});
+
+test('pages offer no uploads, fake verification or backend key', () => {
   for (const { html, nodes } of Object.values(compiled)) {
-    assert.equal(nodes.filter((node) => node.tagName === 'form' || attribute(node, 'type') === 'file').length, 0);
-    assert.doesNotMatch(html, /TINYFISH_API_KEY|yojnaagent\.gov\.in|STQC|Aadhaar Verified|98% Match/i);
+    assert.equal(nodes.filter((node) => attribute(node, 'type') === 'file').length, 0);
+    assert.doesNotMatch(html, /TINYFISH_API_KEY|sk-tinyfish-[a-z0-9]|yojnaagent\.gov\.in|STQC|Aadhaar Verified|98% Match/i);
   }
   for (const node of compiled.profile.nodes.filter((node) => node.tagName === 'input' && attribute(node, 'type') === 'text')) {
     assert.notEqual(attribute(node, 'readonly'), undefined);

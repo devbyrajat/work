@@ -2,7 +2,7 @@
 
 ## Repository audit
 
-Inspected branch `arena/d427ea4d-work` at base commit `8053146ee172b325b1becb7a63f6bd30f617a9b4`. The only original file was `README.md` (a heading). There was no UI source, Python service, dependency manifest, database, TinyFish integration, or test suite to run or preserve in this checkout. Stage 1 introduced only the standalone probe. The supplied eight-screen frontend was added afterward as a static design preview under `frontend/`. It does not yet call FastAPI or TinyFish.
+Inspected branch `arena/d427ea4d-work` at base commit `8053146ee172b325b1becb7a63f6bd30f617a9b4`. The only original file was `README.md` (a heading). There was no UI source, Python service, dependency manifest, database, TinyFish integration, or test suite to run or preserve in this checkout. Stage 1 introduced only the standalone probe. The supplied eight-screen frontend was added afterward as a design preview under `frontend/`. Its assistant now calls a separate, read-only FastAPI pilot for fresh PM-USP CSSS applicants, using manually reviewed NSP evidence. Neither the pilot nor the other screens call TinyFish.
 
 ## Verified TinyAgent REST contract (2026-11-18)
 

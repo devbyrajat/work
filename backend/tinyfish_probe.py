@@ -7,9 +7,12 @@ import sys
 import warnings
 from getpass import GetPassWarning, getpass
 from http.client import HTTPException
+from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
+KEY_ENV = "TINYFISH_API_KEY"
+LOCAL_ENV_PATH = Path(__file__).resolve().with_name(".env")
 RUN_URL = "https://agent.tinyfish.ai/v1/automation/run"
 DEMO_URL = "https://quotes.toscrape.com/"
 EXPECTED_AUTHOR = "Albert Einstein"
@@ -51,10 +54,43 @@ class NoRedirect(HTTPRedirectHandler):
         return None
 
 
-def run_probe(api_key: str) -> dict:
+def configured_key() -> str:
+    """Prefer the backend environment; read only the key assignment in the local file."""
+    value = os.environ.get(KEY_ENV)
+    if value is not None:
+        return value
+
+    try:
+        lines = LOCAL_ENV_PATH.read_text(encoding="utf-8-sig").split("\n")
+    except FileNotFoundError:
+        return ""
+    except (OSError, UnicodeError):
+        raise ProbeError("Cannot read backend/.env. It must be a readable UTF-8 text file.") from None
+
+    values = []
+    for line in lines:
+        name, separator, value = line.partition("=")
+        if name.strip() != KEY_ENV:
+            continue
+        if not separator:
+            raise ProbeError("Use TINYFISH_API_KEY=... on one line in backend/.env.")
+        values.append(value)
+    if len(values) > 1:
+        raise ProbeError("Keep only one TINYFISH_API_KEY assignment in backend/.env.")
+    return values[0] if values else ""
+
+
+def validate_key(api_key: str) -> str:
     api_key = api_key.strip()
     if not api_key:
-        raise ProbeError("Set TINYFISH_API_KEY in your local backend environment.")
+        raise ProbeError("Set TINYFISH_API_KEY in your backend environment or backend/.env, or use --prompt-key.")
+    if any(not "!" <= char <= "~" or char in "\"'\\" for char in api_key):
+        raise ProbeError("Enter only the API key on one line, without spaces, quotes, or backslashes.")
+    return api_key
+
+
+def run_probe(api_key: str) -> dict:
+    api_key = validate_key(api_key)
 
     payload = {
         "url": DEMO_URL,
@@ -134,14 +170,24 @@ def main(argv: list[str] | None = None) -> int:
         description="Run one read-only TinyFish demo request. This may use account credits.",
         allow_abbrev=False,
     )
-    parser.add_argument(
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
         "--prompt-key",
         action="store_true",
-        help="Enter the key in a hidden local prompt instead of using TINYFISH_API_KEY.",
+        help="Enter the key in a hidden local prompt instead of using the saved configuration.",
+    )
+    mode.add_argument(
+        "--check-config",
+        action="store_true",
+        help="Check the local key configuration without contacting TinyFish or using credits.",
     )
     args = parser.parse_args(argv)
     try:
-        api_key = prompt_for_key() if args.prompt_key else os.environ.get("TINYFISH_API_KEY", "")
+        api_key = prompt_for_key() if args.prompt_key else configured_key()
+        if args.check_config:
+            validate_key(api_key)
+            print("TinyFish key is configured. No request was sent; authentication has not been checked.")
+            return 0
         report = run_probe(api_key)
     except ProbeError as exc:
         print(f"TinyFish probe: {exc}", file=sys.stderr)

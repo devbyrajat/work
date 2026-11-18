@@ -4,18 +4,27 @@
 
 YojnaAgent is an Indian government scheme discovery project. The goal is for an agent to research official sources, explain eligibility using evidence, and help citizens prepare to apply without submitting anything on their behalf.
 
-## Run the frontend preview
+## Scholarship checker
 
-The supplied HTML design is now the static frontend. It keeps the navy, warm white, and Inter styling and the desktop sidebar and mobile navigation. The pages and fonts compile locally rather than depending on a Tailwind or fonts CDN at runtime.
+Open the [YojnaAgent scholarship checker](https://yojnaagent.vercel.app/ai-assistant/AiAssistant.html). The pilot covers **fresh PM-USP CSSS applications for AY 2026–27**. Six Yes/No/Not sure questions produce a rule-by-rule eligibility estimate, official evidence, a preparation checklist, and a downloadable PDF. No visitor account or API key is needed. It is not an application, award decision, or live AI search.
 
-From the repository root, with Node.js 22 LTS (22.12 or later):
+The Python rules and manually reviewed sources are in `backend/app/data/pm-usp-csss.json`. FastAPI serves `GET /api/scholarship` (scheme and questions), `POST /api/scholarship` (result), and `POST /api/scholarship?format=pdf` (attachment) on the same origin as Vite. Choices are not stored or sent to a third-party API. YojnaAgent does not collect documents or submit applications.
+
+## Run locally
+
+Use Node.js 22 LTS (22.12+) and Python 3.11+. From the repository root:
 
 ```bash
 npm ci
-npm run dev
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements-dev.txt
+npm run build
+.venv/bin/python -m uvicorn backend.app.preview:app --port 4173 --no-access-log
 ```
 
-Open the URL printed by Vite (usually `http://localhost:5173` when running on your computer). For a production build and route checks, run `npm test`; output is in `dist/`.
+Open `http://localhost:4173`. This serves all eight pages and the API together. For frontend development with hot reload, run `.venv/bin/python -m uvicorn backend.app.main:app --port 8000 --no-access-log` and `npm run dev` in two terminals, then open the Vite URL. Vite proxies `/api` to Python locally.
+
+Run `npm test` and `.venv/bin/python -m unittest discover -s backend/tests -v` to check the frontend build, eligibility outcomes, PDF content, and offline TinyFish probe.
 
 | Screen | Source file |
 | --- | --- |
@@ -30,11 +39,11 @@ Open the URL printed by Vite (usually `http://localhost:5173` when running on yo
 
 The example catalogue is in `frontend/ui/catalog.mjs`. Navigation and repeated card layouts are shared in `frontend/ui/partials.mjs`, and the theme is in `tailwind.config.cjs`.
 
-**This is a design preview, not a running scheme agent.** The questionnaire, category filters, document checkmarks, and demo bookmarks work in the browser. Only bookmarks for the sample schemes are stored locally. No application is submitted, no identity information or document is collected, and no live matching or portal sync is performed. Scheme examples link to published sources and are not eligibility decisions.
+**Only the scholarship checker is connected to real eligibility rules.** The other screens contain marked examples. The sample filters, bookmarks and document checkmarks do not check a real profile, verify documents or sync with a government portal. Only sample bookmarks are stored locally.
 
-### Vercel setup
+### Vercel deployment
 
-`vercel.json` configures a static Vite build. With access to the intended Vercel project, import or connect this repository from the Vercel dashboard, keep the root directory at the repository root, and deploy the branch as a preview. It installs with `npm ci`, builds with `npm run build`, and serves `dist/`. No environment variable is required to deploy this frontend. The Python probe is not exposed as a Vercel function; keep its key server-side.
+Use the existing `yojnaagent` project at the repository root. `vercel.json` builds the eight pages with Vite (`npm ci`, `npm run build`, `dist/`) and Vercel runs `api/scholarship.py` as the Python function. The public pilot requires no environment variables. Test both the page and `/api/scholarship` before promoting a build.
 
 ## Stage 1: Verify the TinyFish connection
 
@@ -42,7 +51,8 @@ The server-side Python probe and offline tests are separate from the frontend. T
 
 | File | Purpose |
 | --- | --- |
-| `backend/tinyfish_probe.py` | Loads the key from a private environment variable or a hidden local prompt, then checks one read-only TinyAgent result on a demo page. |
+| `backend/tinyfish_probe.py` | Loads the key from the backend environment, a private local file, or a hidden prompt. Can check configuration without a network request. |
+| `backend/.env.example` | Empty configuration template. The real `backend/.env` belongs on your computer and is ignored by Git. |
 | `backend/tests/test_tinyfish_probe.py` | Tests the request and failure handling without a key, internet, or paid runs. |
 | `.gitignore` | Excludes common local secret and Python cache files. |
 | [`docs/tinyfish-integration.md`](docs/tinyfish-integration.md) | Records the verified API contract, source restrictions, and staged FastAPI integration plan. |
@@ -54,24 +64,35 @@ The files are already in this checkout. Nothing needs to be copied from chat.
 From the repository root with Python 3.11 or newer:
 
 ```bash
-python3 -m unittest discover -s backend/tests -v
+python3 -m unittest backend.tests.test_tinyfish_probe -v
 ```
 
-Expected: `Ran 12 tests` followed by `OK`. No packages need to be installed.
+Expected: `Ran 18 tests` followed by `OK`. No packages need to be installed.
 
 ### 2. Run one live probe (optional)
 
-On your computer or a private backend host that can reach `agent.tinyfish.ai`, create a key in [TinyFish API Keys](https://agent.tinyfish.ai/api-keys). If a key was shared publicly or in chat, revoke it before using a replacement. Do not put a key in source code, browser code, a command-line argument, or chat.
+Use your own computer or a private backend host that can reach `agent.tinyfish.ai`. If you shared a key, revoke it and generate a replacement in [TinyFish API Keys](https://agent.tinyfish.ai/api-keys). Do not paste the key into chat, source code, or a command-line argument.
 
-From the repository root, run:
+**Save it privately once on your computer:**
 
-```bash
-python3 -m backend.tinyfish_probe --prompt-key
-```
+1. Copy `backend/.env.example` to `backend/.env`. This file is ignored by Git; do not upload it or force-add it.
+2. In `backend/.env`, enter the replacement key after `TINYFISH_API_KEY=`. Use one line, without quotes, spaces, backslashes, or an inline comment.
+3. From the repository root, run the local configuration check:
 
-Enter the key when the terminal prompts you. It is not displayed or saved. If input cannot be hidden, the probe stops instead of falling back to visible input. A successful input starts one TinyAgent run and may use your TinyFish balance or credits.
+   ```bash
+   python3 -m backend.tinyfish_probe --check-config
+   ```
 
-For an unattended run, set `TINYFISH_API_KEY` in the private backend environment and run `python3 -m backend.tinyfish_probe` without `--prompt-key`.
+   Expected: `TinyFish key is configured.` This does not print the key, contact TinyFish, use credits, or verify the account.
+4. Run the live test:
+
+   ```bash
+   python3 -m backend.tinyfish_probe
+   ```
+
+   This sends one request and may use TinyFish balance or credits. On Windows, use `py -3` in place of `python3` if needed.
+
+On a private backend host, use its secret settings to set `TINYFISH_API_KEY` rather than copying the file. The environment variable takes priority over `backend/.env`, even if it is empty. To test a key without saving it at all, use `python3 -m backend.tinyfish_probe --prompt-key` in a local terminal; the prompt overrides both saved sources and stops if input cannot be hidden.
 
 Expected shape on success (`run_id` below is a placeholder):
 
@@ -91,4 +112,4 @@ Expected shape on success (`run_id` below is a placeholder):
 
 **If the live probe fails:** A missing key stops before networking. For `401`, verify the key privately; for `402` or `403`, check your wallet, credits, and permissions; for `429`, wait for existing runs to finish or check the account limits. If the result is incomplete or the request times out, check [TinyFish run history](https://agent.tinyfish.ai/runs) before retrying. A cancelled, blocked, or incomplete run is not a successful extraction.
 
-Once the live result is confirmed, the next slice is a FastAPI research job for a single scholarship topic on a source that permits automated access. The existing assistant and results screens can then be wired to that backend without changing their design.
+Live TinyFish research is not enabled on the site. It needs a replacement key stored privately, a successful sandbox run, and a source that permits automated access. It is separate from the curated scholarship checker.

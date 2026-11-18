@@ -13,7 +13,7 @@ const logo = `<svg class="h-[56%] w-[56%]" viewBox="0 0 24 24" fill="none" strok
 </svg>`;
 
 const navItems = [
-  ['dashboard', 'dashboard', 'Overview'], ['assistant', 'smart_toy', 'AI Scheme Assistant'],
+  ['dashboard', 'dashboard', 'Overview'], ['assistant', 'smart_toy', 'Scholarship Checker'],
   ['results', 'explore', 'Explore Schemes'], ['recommendations', 'recommend', 'My Recommendations', `${pageHref('dashboard')}#recommendations`],
   ['saved', 'bookmark', 'Saved Schemes', `${pageHref('results')}?view=saved`], ['tracker', 'assignment_turned_in', 'Application Tracker'],
   ['documents', 'checklist', 'Document Checker'], ['profile', 'person', 'My Profile'],
@@ -24,7 +24,7 @@ const mobileItems = [
   ['results', 'explore', 'Schemes'], ['tracker', 'track_changes', 'Tracker'], ['profile', 'person', 'Profile'],
 ];
 const mobileTitles = {
-  assistant: 'AI Scheme Assistant', dashboard: 'YojnaAgent', results: 'Scheme Results',
+  assistant: 'Scholarship Checker', dashboard: 'YojnaAgent', results: 'Scheme Results',
   details: 'Scheme Details', documents: 'Document Readiness', tracker: 'Application Tracker', profile: 'User Profile',
 };
 const currentPage = (key, page) => key === page || (key === 'results' && page === 'details');
@@ -61,7 +61,7 @@ function mobileHeader(page) {
         : `<a href="${backHref}" aria-label="${page === 'details' ? 'Back to schemes' : 'Back to dashboard'}" class="flex h-7 w-7 shrink-0 items-center justify-center text-text-secondary">${icon('arrow_back', 'text-title-lg')}</a>`}
       <span class="font-headline text-title-md text-primary-navy">${mobileTitles[page]}</span>
     </div>
-    <span class="badge shrink-0">Demo</span>
+    <span class="badge shrink-0">${page === 'assistant' ? 'Pilot' : 'Demo'}</span>
   </header>`;
 }
 
@@ -74,7 +74,7 @@ function mobileNav(page) {
 
 const previewNotice = `<p class="flex items-start gap-2 rounded border border-secondary-blue/20 bg-secondary-blue/5 px-3.5 py-2.5 text-body-sm text-text-secondary">
   ${icon('info', 'mt-0.5 text-secondary-blue text-title-sm')}
-  <span><strong class="font-semibold text-primary-navy">Design preview.</strong> Sample content only. YojnaAgent is not a government portal and does not determine eligibility or submit applications.</span>
+  <span><strong class="font-semibold text-primary-navy">Design preview.</strong> This screen uses sample content. The scholarship checker is separate. YojnaAgent is not a government portal and does not submit applications.</span>
 </p>`;
 
 function linkToSource(url, label, classes = 'text-secondary-blue hover:underline') {

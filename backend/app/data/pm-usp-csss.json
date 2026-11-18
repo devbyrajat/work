@@ -1,0 +1,73 @@
+{
+  "id": "pm-usp-csss-fresh",
+  "name": "PM-USP Central Sector Scholarship for College and University Students",
+  "department": "Department of Higher Education, Ministry of Education",
+  "scope": "Central scheme · First-time applicants",
+  "academic_year": "2026–27",
+  "category": "Education",
+  "description": "A merit-cum-means scholarship for students starting a regular degree. This check does not cover renewals.",
+  "benefit": "The guidelines list ₹12,000 per year for the first three undergraduate years. Later-year rates depend on the course and renewal conditions.",
+  "sources_reviewed_on": "2026-11-18",
+  "application_url": "https://scholarships.gov.in/Students",
+  "application_window": "For AY 2026–27, NSP listed 30 November 2026 as the fresh student deadline when checked on 18 November 2026. Check NSP for the current dates.",
+  "sources": {
+    "guidelines": {"label": "Ministry of Education scheme guidelines (2022–23 onwards)", "url": "https://scholarships.gov.in/public/schemeGuidelines/CSSS_GUIDLINES_07022024_updated.pdf"},
+    "faq": {"label": "Ministry of Education FAQ (2025–26, linked by NSP for AY 2026–27)", "url": "https://scholarships.gov.in/public/schemeGuidelines/FAQ_DOHE_CSSS.pdf"},
+    "window": {"label": "NSP fresh application announcement", "url": "https://scholarships.gov.in/student-announcements"}
+  },
+  "documents": [
+    {"name": "Class 12 marksheet", "detail": "Listed for fresh applicants in the Ministry FAQ, question 19."},
+    {"name": "Family income certificate", "detail": "Listed for fresh applicants; confirm the required format on NSP."},
+    {"name": "Category or caste certificate", "detail": "For reserved-category applicants only, if applicable."},
+    {"name": "Disability certificate", "detail": "Only if applicable. Check current NSP instructions."}
+  ],
+  "steps": [
+    "Check the current fresh application deadline on the National Scholarship Portal (NSP) and confirm you are on your board’s qualifying list.",
+    "On NSP only, complete or use your One-Time Registration (OTR). Choose your domicile state and Post-Matric, then select the PM-USP CSSS scheme.",
+    "Confirm your course and institution, including its AISHE status, with your institute nodal officer. Submit your application and required documents yourself, only on NSP."
+  ],
+  "rules": [
+    {
+      "field": "recent_class_12", "label": "Recent Class 12 completion",
+      "question": "Did you complete Class 12 (or equivalent) in AY 2025–26, without a gap before college?",
+      "hint": "The fresh application is for students who went from Class 12 into the first year of college.",
+      "expected": true, "failure": "This cycle is for students who completed Class 12 in the previous academic year and started college without a gap.",
+      "source": "faq", "section": "Questions 1 and 10", "quote": "Students who have completed Class-XII in the last Academic Year"
+    },
+    {
+      "field": "first_year_regular_degree", "label": "First year of a regular degree",
+      "question": "Did you start the first year of a regular undergraduate degree in AY 2026–27?",
+      "hint": "Diploma, distance and correspondence courses do not qualify for this check.",
+      "expected": true, "failure": "Fresh applications are for the first year of a regular degree, not diplomas or distance courses.",
+      "source": "faq", "section": "Questions 1 and 10", "quote": "admission in 1st year of regular graduation course"
+    },
+    {
+      "field": "recognised_institution", "label": "Recognised college or institution",
+      "question": "Is your course at an institution recognised by the relevant regulator?",
+      "hint": "Ask your college or institute if you are not sure.",
+      "expected": true, "failure": "The guidelines require a recognised college or institution.",
+      "source": "guidelines", "section": "Section 4(iii)", "quote": "Pursuing courses at colleges/institutions recognized by All India Council for Technical Education and respective Regulatory Bodies concerned"
+    },
+    {
+      "field": "board_merit", "label": "Class 12 board merit list",
+      "question": "Are you on your board’s eligible Class 12 list for PM-USP CSSS?",
+      "hint": "This means above the 80th percentile in your board and stream, not 80% marks. Choose Not sure if you have not checked the list.",
+      "expected": true, "failure": "The scheme requires the qualifying board percentile and merit-list entry.",
+      "source": "guidelines", "section": "Section 4(i)", "quote": "Students who are above 80th percentile of successful candidates in the relevant stream"
+    },
+    {
+      "field": "income_within_limit", "label": "Gross annual family income limit",
+      "question": "Is your gross parental or family income ₹4.5 lakh per year or less?",
+      "hint": "The limit includes exactly ₹4.5 lakh. You do not need to enter an exact income.",
+      "expected": true, "failure": "Your selected income band is above the published INR 4.5 lakh annual limit.",
+      "source": "guidelines", "section": "Section 4(v)", "quote": "Students with gross parental/family income upto ₹ 4.5 lakh per annum"
+    },
+    {
+      "field": "other_aid", "label": "Other scholarship or fee support",
+      "question": "Are you receiving another scholarship, a fee waiver, or fee reimbursement?",
+      "hint": "Answer based on benefits you receive, not applications you have only submitted.",
+      "expected": false, "failure": "Receiving another scholarship, fee waiver or reimbursement does not meet this condition.",
+      "source": "guidelines", "section": "Section 4(iv)", "quote": "Not availing benefit of any other merit scholarship schemes, State run scholarship schemes, fee waiver, reimbursement scheme."
+    }
+  ]
+}

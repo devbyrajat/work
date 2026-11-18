@@ -3,22 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Scheme Assistant — YojnaAgent</title>
+  <title>Scholarship Checker — YojnaAgent</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/src/app.css">
   <script type="module" src="/src/main.js"></script>
+  <script type="module" src="/src/scholarship.js"></script>
 </head>
 <body data-page="assistant" class="app-page">
   <a class="skip-link" href="#main">Skip to content</a>
   <!-- ui:sidebar -->
   <!-- ui:mobile-header -->
   <main id="main" class="app-main flex max-w-4xl flex-col gap-6" tabindex="-1">
-    <!-- ui:preview-notice -->
+    <section class="panel space-y-5 p-4 sm:p-6" data-scholarship-checker aria-labelledby="scholarship-heading">
+      <div class="flex items-start gap-3 border-b border-light-outline pb-4">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary-blue/10 text-secondary-blue"><span class="material-symbols-outlined text-title-md" aria-hidden="true">smart_toy</span></div>
+        <div class="min-w-0 space-y-1.5">
+          <span class="badge text-success">Scholarship pilot · No account needed</span>
+          <h1 id="scholarship-heading" class="font-headline text-title-lg text-primary-navy sm:text-headline-md">Check a college scholarship</h1>
+          <p class="text-body-md text-text-secondary">Answer six questions to check the published rules for a fresh PM-USP CSSS application (2026–27). Choose <strong>Not sure</strong> if you don’t know.</p>
+        </div>
+      </div>
+      <div class="space-y-1 rounded border border-secondary-blue/20 bg-secondary-blue/5 px-3.5 py-3 text-body-sm text-text-secondary">
+        <p><strong class="text-primary-navy">Your privacy:</strong> Only your choices go to this site’s server for this check. We don’t save them. Don’t enter names, ID numbers or documents.</p>
+        <p>This checks one scholarship using published rules, not a live AI search. Other screens are a design preview.</p>
+      </div>
+      <form method="post" action="/api/scholarship" autocomplete="off" data-pilot-form>
+        <fieldset class="min-w-0 space-y-5" data-pilot-fields disabled>
+          <legend class="sr-only">Scholarship questionnaire</legend>
+          <div class="grid gap-4 sm:grid-cols-2" data-pilot-questions></div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="submit" class="primary-action" data-pilot-submit>Check eligibility <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button>
+            <button type="reset" class="secondary-action">Clear answers</button>
+          </div>
+        </fieldset>
+      </form>
+      <p class="text-body-sm text-text-secondary" role="status" data-pilot-status>Loading the questionnaire…</p>
+      <button type="button" class="secondary-action" data-pilot-retry hidden>Try loading again</button>
+      <noscript><p class="text-body-sm">Enable JavaScript to use the checker.</p></noscript>
+      <p class="text-body-sm"><a href="https://scholarships.gov.in/public/schemeGuidelines/CSSS_GUIDLINES_07022024_updated.pdf" class="text-secondary-blue underline" target="_blank" rel="noopener noreferrer">Read the official scheme guidelines</a></p>
+    </section>
+
+    <section class="panel space-y-5 p-4 sm:p-6" aria-labelledby="scholarship-result-heading" tabindex="-1" data-pilot-result hidden>
+      <div class="space-y-2">
+        <p class="font-label text-label-sm text-text-secondary" data-pilot-scope></p>
+        <h2 id="scholarship-result-heading" class="font-headline text-headline-md text-primary-navy" data-pilot-outcome></h2>
+        <p class="font-label text-label-lg text-primary-navy" data-pilot-scheme></p>
+        <p class="text-body-md text-text-primary" data-pilot-summary></p>
+        <p class="rounded border border-secondary-blue/20 bg-secondary-blue/5 p-3 text-body-sm text-text-secondary" data-pilot-notice></p>
+      </div>
+      <div class="space-y-2">
+        <h3 class="font-headline text-title-md text-primary-navy">How we checked</h3>
+        <ul class="divide-y divide-light-outline rounded border border-light-outline" data-pilot-checks></ul>
+      </div>
+      <div class="grid gap-5 lg:grid-cols-2">
+        <div class="space-y-2 rounded border border-light-outline p-4">
+          <h3 class="font-headline text-title-md text-primary-navy">Published benefit</h3>
+          <p class="text-body-sm text-text-secondary" data-pilot-benefit></p>
+          <h3 class="pt-2 font-headline text-title-md text-primary-navy">What to prepare</h3>
+          <p class="text-body-sm text-text-secondary">Mark items as you prepare them. These checkboxes aren’t saved or verified.</p>
+          <ul class="space-y-2" data-pilot-documents></ul>
+        </div>
+        <div class="space-y-2 rounded border border-light-outline p-4">
+          <h3 class="font-headline text-title-md text-primary-navy">How to apply</h3>
+          <p class="text-body-sm text-text-secondary" data-pilot-window></p>
+          <ol class="list-decimal space-y-2 pl-5 text-body-sm text-text-secondary" data-pilot-steps></ol>
+          <a class="secondary-action mt-2" data-pilot-portal target="_blank" rel="noopener noreferrer">Open official portal</a>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <h3 class="font-headline text-title-md text-primary-navy">Official sources</h3>
+        <p class="text-body-sm text-text-secondary" data-pilot-reviewed></p>
+        <ul class="list-disc space-y-1 pl-5 text-body-sm" data-pilot-sources></ul>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 border-t border-light-outline pt-4">
+        <button type="button" class="primary-action" data-pilot-pdf>Download PDF report</button>
+        <p class="text-body-sm text-text-secondary" role="status" data-pilot-pdf-status></p>
+      </div>
+    </section>
+
+    <details class="space-y-4">
+      <summary class="panel cursor-pointer px-4 py-3 font-label text-label-md text-primary-navy">See the example assistant conversation</summary>
     <div class="panel flex flex-wrap items-center justify-between gap-4 p-4">
       <div class="flex items-center gap-3">
         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary-blue/10 text-secondary-blue"><span class="material-symbols-outlined text-title-md" aria-hidden="true">smart_toy</span></div>
         <div>
-          <h1 class="font-headline text-title-md text-primary-navy">Eligibility Questionnaire</h1>
+          <h2 class="font-headline text-title-md text-primary-navy">Example Eligibility Questionnaire</h2>
           <p class="flex flex-wrap gap-x-2 text-body-sm text-text-secondary"><span>Example: Step 5 of 7</span><span class="font-medium text-secondary-blue">Residence &amp; work</span></p>
         </div>
       </div>
@@ -90,6 +159,7 @@
       <div class="text-body-sm text-text-secondary"><p class="flex items-start gap-2"><span class="material-symbols-outlined mt-0.5 text-title-sm text-success" aria-hidden="true">lock</span><span>Example choices are not sent or used to check eligibility.</span></p><p data-reset-status role="status"></p></div>
       <div class="flex flex-wrap gap-2 sm:flex-nowrap"><a href="/user-dashboard/UserDashboard.html" class="secondary-action grow whitespace-nowrap">Back to Dashboard</a><a href="/scheme-results/SchemeResults.html" class="primary-action grow whitespace-nowrap">View Example Results <span class="material-symbols-outlined text-title-sm" aria-hidden="true">arrow_forward</span></a></div>
     </div>
+    </details>
   </main>
   <!-- ui:mobile-nav -->
 </body>
