@@ -42,7 +42,7 @@ The server-side Python probe and offline tests are separate from the frontend. T
 
 | File | Purpose |
 | --- | --- |
-| `backend/tinyfish_probe.py` | Makes one authenticated, read-only TinyAgent request to a fixed demo page and checks the structured result. |
+| `backend/tinyfish_probe.py` | Loads the key from a private environment variable or a hidden local prompt, then checks one read-only TinyAgent result on a demo page. |
 | `backend/tests/test_tinyfish_probe.py` | Tests the request and failure handling without a key, internet, or paid runs. |
 | `.gitignore` | Excludes common local secret and Python cache files. |
 | [`docs/tinyfish-integration.md`](docs/tinyfish-integration.md) | Records the verified API contract, source restrictions, and staged FastAPI integration plan. |
@@ -57,20 +57,21 @@ From the repository root with Python 3.11 or newer:
 python3 -m unittest discover -s backend/tests -v
 ```
 
-Expected: `Ran 8 tests` followed by `OK`. No packages need to be installed.
+Expected: `Ran 12 tests` followed by `OK`. No packages need to be installed.
 
 ### 2. Run one live probe (optional)
 
-On your computer or a private backend host that can reach `agent.tinyfish.ai`, create a key in [TinyFish API Keys](https://agent.tinyfish.ai/api-keys). Run this from the repository root in Bash. The key prompt hides what you paste and the subshell discards the variable when it exits. Do not paste the key into chat or commit it. This starts one TinyAgent run and may use your TinyFish balance or credits.
+On your computer or a private backend host that can reach `agent.tinyfish.ai`, create a key in [TinyFish API Keys](https://agent.tinyfish.ai/api-keys). If a key was shared publicly or in chat, revoke it before using a replacement. Do not put a key in source code, browser code, a command-line argument, or chat.
+
+From the repository root, run:
 
 ```bash
-(
-  IFS= read -rsp 'TinyFish API key (input hidden): ' TINYFISH_API_KEY
-  printf '\n'
-  export TINYFISH_API_KEY
-  python3 -m backend.tinyfish_probe
-)
+python3 -m backend.tinyfish_probe --prompt-key
 ```
+
+Enter the key when the terminal prompts you. It is not displayed or saved. If input cannot be hidden, the probe stops instead of falling back to visible input. A successful input starts one TinyAgent run and may use your TinyFish balance or credits.
+
+For an unattended run, set `TINYFISH_API_KEY` in the private backend environment and run `python3 -m backend.tinyfish_probe` without `--prompt-key`.
 
 Expected shape on success (`run_id` below is a placeholder):
 

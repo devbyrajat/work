@@ -3,6 +3,7 @@ import io
 import json
 import os
 import unittest
+import warnings
 from unittest.mock import patch
 from urllib.error import HTTPError, URLError
 
@@ -50,9 +51,64 @@ class TinyFishProbeTests(unittest.TestCase):
     def test_missing_key_stops_before_network(self):
         error_output = io.StringIO()
         with patch.dict(os.environ, {"TINYFISH_API_KEY": ""}), contextlib.redirect_stderr(error_output):
-            self.assertEqual(probe.main(), 1)
+            self.assertEqual(probe.main([]), 1)
         self.assertIn("Set TINYFISH_API_KEY", error_output.getvalue())
         self.build_opener.assert_not_called()
+
+    def test_environment_key_does_not_prompt(self):
+        self.respond(RUN)
+        output = io.StringIO()
+        with (
+            patch.dict(os.environ, {"TINYFISH_API_KEY": KEY}),
+            patch.object(probe, "getpass") as prompt,
+            contextlib.redirect_stdout(output),
+        ):
+            self.assertEqual(probe.main([]), 0)
+        prompt.assert_not_called()
+        self.open.assert_called_once()
+        self.assertEqual(self.open.call_args.args[0].get_header("X-api-key"), KEY)
+        self.assertNotIn(KEY, output.getvalue())
+
+    def test_prompt_key_is_used_without_saving_or_echoing_it(self):
+        self.respond(RUN)
+        output = io.StringIO()
+        error_output = io.StringIO()
+        with (
+            patch.dict(os.environ, {"TINYFISH_API_KEY": "unused-env-fixture"}),
+            patch.object(probe, "getpass", return_value=KEY) as prompt,
+            contextlib.redirect_stdout(output),
+            contextlib.redirect_stderr(error_output),
+        ):
+            self.assertEqual(probe.main(["--prompt-key"]), 0)
+            self.assertEqual(os.environ["TINYFISH_API_KEY"], "unused-env-fixture")
+        prompt.assert_called_once_with("TinyFish API key (input hidden): ")
+        self.open.assert_called_once()
+        self.assertEqual(self.open.call_args.args[0].get_header("X-api-key"), KEY)
+        self.assertEqual(json.loads(output.getvalue())["status"], "COMPLETED")
+        self.assertNotIn(KEY, output.getvalue() + error_output.getvalue())
+
+    def test_prompt_aborts_instead_of_falling_back_to_visible_input(self):
+        def visible_fallback(_prompt):
+            warnings.warn("Cannot hide input", probe.GetPassWarning)
+            self.fail("The prompt must abort before reading visible input")
+
+        error_output = io.StringIO()
+        with (
+            patch.object(probe, "getpass", side_effect=visible_fallback),
+            contextlib.redirect_stderr(error_output),
+        ):
+            self.assertEqual(probe.main(["--prompt-key"]), 1)
+        self.assertIn("Cannot hide key input", error_output.getvalue())
+        self.build_opener.assert_not_called()
+
+    def test_empty_or_cancelled_prompt_does_not_send_request(self):
+        for prompt_result in ({"return_value": "  "}, {"side_effect": EOFError}, {"side_effect": KeyboardInterrupt}):
+            with self.subTest(prompt_result=prompt_result):
+                error_output = io.StringIO()
+                with patch.object(probe, "getpass", **prompt_result), contextlib.redirect_stderr(error_output):
+                    self.assertEqual(probe.main(["--prompt-key"]), 1)
+                self.assertIn("No request was sent", error_output.getvalue())
+                self.build_opener.assert_not_called()
 
     def test_completed_run_can_still_be_incomplete(self):
         self.respond({**RUN, "result": {"status": "incomplete", "source_url": None, "first_author": None}})

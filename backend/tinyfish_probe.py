@@ -1,8 +1,11 @@
 """Run one opt-in TinyFish request against a web scraping demo, not a scheme portal."""
 
+import argparse
 import json
 import os
 import sys
+import warnings
+from getpass import GetPassWarning, getpass
 from http.client import HTTPException
 from urllib.error import HTTPError, URLError
 from urllib.request import HTTPRedirectHandler, Request, build_opener
@@ -107,9 +110,39 @@ def run_probe(api_key: str) -> dict:
     }
 
 
-def main() -> int:
+def prompt_for_key() -> str:
     try:
-        report = run_probe(os.environ.get("TINYFISH_API_KEY", ""))
+        with warnings.catch_warnings():
+            # Abort instead of letting getpass fall back to visible input.
+            warnings.simplefilter("error", GetPassWarning)
+            api_key = getpass("TinyFish API key (input hidden): ")
+    except (GetPassWarning, OSError):
+        raise ProbeError(
+            "Cannot hide key input in this terminal. Open a local terminal or "
+            "configure TINYFISH_API_KEY privately. No request was sent."
+        ) from None
+    except (EOFError, KeyboardInterrupt):
+        raise ProbeError("Key entry cancelled. No request was sent.") from None
+
+    if not api_key.strip():
+        raise ProbeError("No key entered. No request was sent.")
+    return api_key
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Run one read-only TinyFish demo request. This may use account credits.",
+        allow_abbrev=False,
+    )
+    parser.add_argument(
+        "--prompt-key",
+        action="store_true",
+        help="Enter the key in a hidden local prompt instead of using TINYFISH_API_KEY.",
+    )
+    args = parser.parse_args(argv)
+    try:
+        api_key = prompt_for_key() if args.prompt_key else os.environ.get("TINYFISH_API_KEY", "")
+        report = run_probe(api_key)
     except ProbeError as exc:
         print(f"TinyFish probe: {exc}", file=sys.stderr)
         return 1
