@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document Readiness Checker — YojnaAgent</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/app.css">
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body data-page="documents" class="app-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <!-- ui:sidebar -->
+  <!-- ui:mobile-header -->
+  <main id="main" class="app-main max-w-5xl space-y-6" tabindex="-1">
+    <!-- ui:preview-notice -->
+    <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+      <div>
+        <div class="mb-1 flex items-center gap-2 font-label text-label-sm text-text-secondary"><span class="material-symbols-outlined text-title-sm text-accent-gold" aria-hidden="true">security</span> Prototype checklist · No file uploads</div>
+        <h1 class="font-headline text-headline-md text-primary-navy sm:text-headline-lg">Document Readiness Checker</h1>
+        <p class="mt-1 text-body-md text-text-secondary">Practice with an example scheme. Checkmarks are not sent or saved.</p>
+      </div>
+      <div class="w-full max-w-xs">
+        <label for="checklist-scheme" class="mb-1 block font-label text-label-md text-text-primary">Choose an example scheme</label>
+        <select id="checklist-scheme" class="field" disabled><!-- ui:scheme-options --></select>
+      </div>
+    </div>
+    <!-- ui:checklists -->
+  </main>
+  <!-- ui:mobile-nav -->
+</body>
+</html>

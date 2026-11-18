@@ -8,3 +8,8 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# Frontend build and provider-local settings
+/node_modules/
+/dist/
+/.vercel/
