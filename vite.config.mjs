@@ -25,7 +25,12 @@ function inlineIcons(html) {
   );
 }
 
-const previewHost = { host: '0.0.0.0', allowedHosts: ['.e2b.app'] };
+const previewHost = {
+  host: '0.0.0.0',
+  allowedHosts: ['.e2b.app'],
+  // Only Vite connects to the local Python server; browsers use the same origin.
+  proxy: { '/api': 'http://127.0.0.1:8000' },
+};
 
 export default defineConfig({
   root: frontend,

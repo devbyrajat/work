@@ -4,6 +4,8 @@ import json
 import os
 import unittest
 import warnings
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 from urllib.error import HTTPError, URLError
 
@@ -25,6 +27,8 @@ class TinyFishProbeTests(unittest.TestCase):
         self.addCleanup(patcher.stop)
         self.build_opener = patcher.start()
         self.open = self.build_opener.return_value.open
+        self.local_env = Path(self.enterContext(TemporaryDirectory())) / ".env"
+        self.enterContext(patch.object(probe, "LOCAL_ENV_PATH", self.local_env))
 
     def respond(self, body):
         self.open.return_value = io.BytesIO(json.dumps(body).encode("utf-8"))
@@ -49,13 +53,15 @@ class TinyFishProbeTests(unittest.TestCase):
         self.assertIsInstance(self.build_opener.call_args.args[0], probe.NoRedirect)
 
     def test_missing_key_stops_before_network(self):
+        self.local_env.write_text(f"TINYFISH_API_KEY={KEY}\n", encoding="utf-8")
         error_output = io.StringIO()
         with patch.dict(os.environ, {"TINYFISH_API_KEY": ""}), contextlib.redirect_stderr(error_output):
             self.assertEqual(probe.main([]), 1)
         self.assertIn("Set TINYFISH_API_KEY", error_output.getvalue())
         self.build_opener.assert_not_called()
 
-    def test_environment_key_does_not_prompt(self):
+    def test_environment_key_overrides_file_and_does_not_prompt(self):
+        self.local_env.write_text("TINYFISH_API_KEY=unused-local-fixture\n", encoding="utf-8")
         self.respond(RUN)
         output = io.StringIO()
         with (
@@ -68,6 +74,74 @@ class TinyFishProbeTests(unittest.TestCase):
         self.open.assert_called_once()
         self.assertEqual(self.open.call_args.args[0].get_header("X-api-key"), KEY)
         self.assertNotIn(KEY, output.getvalue())
+
+    def test_local_file_is_used_when_environment_is_unset(self):
+        self.local_env.write_bytes(
+            f"# Private local config\r\nNOT_USED=other-value\r\nTINYFISH_API_KEY={KEY}\r\n".encode("utf-8-sig")
+        )
+        self.respond(RUN)
+        output = io.StringIO()
+        with patch.dict(os.environ, {}, clear=True), contextlib.redirect_stdout(output):
+            self.assertEqual(probe.main([]), 0)
+            self.assertNotIn("TINYFISH_API_KEY", os.environ)
+        self.open.assert_called_once()
+        self.assertEqual(self.open.call_args.args[0].get_header("X-api-key"), KEY)
+        self.assertNotIn(KEY, output.getvalue())
+
+    def test_missing_file_and_environment_stop_before_network(self):
+        error_output = io.StringIO()
+        with patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(error_output):
+            self.assertEqual(probe.main([]), 1)
+        self.assertIn("Set TINYFISH_API_KEY", error_output.getvalue())
+        self.build_opener.assert_not_called()
+
+    def test_config_check_does_not_prompt_print_key_or_send_request(self):
+        self.local_env.write_text(f"TINYFISH_API_KEY={KEY}\n", encoding="utf-8")
+        output = io.StringIO()
+        with (
+            patch.dict(os.environ, {}, clear=True),
+            patch.object(probe, "getpass") as prompt,
+            contextlib.redirect_stdout(output),
+        ):
+            self.assertEqual(probe.main(["--check-config"]), 0)
+        self.assertIn("authentication has not been checked", output.getvalue())
+        self.assertNotIn(KEY, output.getvalue())
+        prompt.assert_not_called()
+        self.build_opener.assert_not_called()
+
+    def test_config_check_rejects_badly_pasted_keys_without_echoing_them(self):
+        invalid_keys = (f'"{KEY}"', f"{KEY} extra-text", f"{KEY}\\_", f"{KEY}\nother-line", f"{KEY}\x00", f"{KEY}é")
+        for value in invalid_keys:
+            with self.subTest(value=value):
+                error_output = io.StringIO()
+                with (
+                    patch.object(probe, "configured_key", return_value=value),
+                    contextlib.redirect_stderr(error_output),
+                ):
+                    self.assertEqual(probe.main(["--check-config"]), 1)
+                self.assertIn("Enter only the API key", error_output.getvalue())
+                self.assertNotIn(KEY, error_output.getvalue())
+                self.build_opener.assert_not_called()
+
+    def test_duplicate_or_malformed_local_assignments_are_not_used(self):
+        for content in (f"TINYFISH_API_KEY={KEY}\nTINYFISH_API_KEY={KEY}\n", "TINYFISH_API_KEY\n"):
+            with self.subTest(content=content):
+                self.local_env.write_text(content, encoding="utf-8")
+                error_output = io.StringIO()
+                with patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(error_output):
+                    self.assertEqual(probe.main([]), 1)
+                self.assertIn("backend/.env", error_output.getvalue())
+                self.assertNotIn(KEY, error_output.getvalue())
+                self.build_opener.assert_not_called()
+
+    def test_bad_local_file_encoding_returns_safe_error(self):
+        self.local_env.write_bytes(f"TINYFISH_API_KEY={KEY}".encode("ascii") + b"\xff")
+        error_output = io.StringIO()
+        with patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(error_output):
+            self.assertEqual(probe.main([]), 1)
+        self.assertIn("readable UTF-8 text file", error_output.getvalue())
+        self.assertNotIn(KEY, error_output.getvalue())
+        self.build_opener.assert_not_called()
 
     def test_prompt_key_is_used_without_saving_or_echoing_it(self):
         self.respond(RUN)

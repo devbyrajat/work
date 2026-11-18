@@ -3,5 +3,12 @@
   "framework": "vite",
   "installCommand": "npm ci",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "functions": {
+    "api/scholarship.py": {
+      "maxDuration": 15,
+      "includeFiles": "backend/app/data/**",
+      "excludeFiles": "{dist/**,frontend/**,node_modules/**,.venv/**,backend/tests/**,backend/tinyfish_probe.py,**/.env*}"
+    }
+  }
 }
