@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scheme Matching Results — YojnaAgent</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/app.css">
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body data-page="results" class="app-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <!-- ui:sidebar -->
+  <!-- ui:mobile-header -->
+  <main id="main" class="app-main max-w-7xl space-y-6" tabindex="-1">
+    <!-- ui:preview-notice -->
+    <div class="space-y-4">
+      <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+        <div>
+          <div class="mb-1 flex items-center gap-2 font-label text-label-sm text-text-secondary"><span class="material-symbols-outlined text-title-sm text-accent-gold" aria-hidden="true">fact_check</span> Example catalogue · no live matches</div>
+          <h1 data-results-title class="font-headline text-headline-md text-primary-navy sm:text-headline-lg">Your Recommended Schemes</h1>
+          <p class="mt-1 text-body-md text-text-secondary">Browse sample cards and their source links. These results are not based on your questionnaire answers.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <a href="/scheme-results/SchemeResults.html" class="secondary-action" data-show-all hidden>Explore All Examples</a>
+          <a href="/ai-assistant/AiAssistant.html" class="primary-action"><span class="material-symbols-outlined text-title-sm" aria-hidden="true">smart_toy</span> Back to Assistant</a>
+        </div>
+      </div>
+      <div class="flex min-w-0 flex-wrap gap-2" role="group" aria-label="Filter by category" data-filters hidden><!-- ui:filters --></div>
+      <p data-results-count role="status" class="text-body-sm text-text-secondary"><!-- ui:scheme-count --> examples</p>
+    </div>
+    <div class="panel p-6" data-results-empty hidden><h2 class="font-headline text-title-md text-primary-navy">No examples in this view</h2><p class="text-body-md text-text-secondary">Change the filter, or use Save Scheme on a card to add it to your bookmarks.</p><a href="/scheme-results/SchemeResults.html" class="mt-3 inline-flex font-label text-label-md text-secondary-blue hover:underline">Browse all examples →</a></div>
+    <div class="space-y-4"><!-- ui:results --></div>
+  </main>
+  <!-- ui:mobile-nav -->
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 ## Repository audit
 
-Inspected branch `arena/d427ea4d-work` at base commit `8053146ee172b325b1becb7a63f6bd30f617a9b4`. The only original file was `README.md` (a heading). There was no UI source, Python service, dependency manifest, database, TinyFish integration, or test suite to run or preserve in this checkout. The existing design may be elsewhere; its files are needed for UI integration. The only executable code introduced in this stage is a standalone probe, not a new frontend or a deployed API.
+Inspected branch `arena/d427ea4d-work` at base commit `8053146ee172b325b1becb7a63f6bd30f617a9b4`. The only original file was `README.md` (a heading). There was no UI source, Python service, dependency manifest, database, TinyFish integration, or test suite to run or preserve in this checkout. Stage 1 introduced only the standalone probe. The supplied eight-screen frontend was added afterward as a static design preview under `frontend/`. It does not yet call FastAPI or TinyFish.
 
 ## Verified TinyAgent REST contract (2026-11-18)
 
@@ -40,6 +40,6 @@ SSE has no `Last-Event-ID` resume. Keep the provider run ID server-side and poll
 | 1. TinyFish probe | `backend/tinyfish_probe.py`, `backend/tests/test_tinyfish_probe.py` | Run the offline tests and then confirm a single live demo extraction using the commands in [README](../README.md). Offline success does not verify the account or a live run. |
 | 2. One FastAPI research job | `backend/app/main.py`, `backend/app/research.py`, `backend/app/tinyfish.py` | Test one live extraction on an approved scheme source, plus blocked pages, invalid results, deadline and disconnect recovery. |
 | 3. Eligibility and recommendations | `backend/app/eligibility.py`, `backend/app/schemes.py` | Test numeric boundaries, missing fields, contradictory evidence, and conditional exceptions before making recommendations. |
-| 4. Existing UI and reports | Existing frontend paths (once provided), `backend/app/reports.py` | Run a profile through research, eligibility, document checklist, and PDF download. Preserve the existing layout and style. |
+| 4. Wire the supplied UI and reports | `frontend/`, `backend/app/reports.py` | Run a profile through research, eligibility, document checklist, and PDF download. Preserve the existing layout and style. |
 
 For Stage 2, one possible **YojnaAgent** API contract is `POST /api/research` to create a job and `GET /api/research/{job_id}/events` to stream sanitized progress to the existing UI. These are proposed application routes, not TinyFish endpoints. The server owns the provider connection and translates progress into research and evaluation steps. Restrict access to jobs, apply per-user budgets and timeouts, and don't expose raw upstream errors or publish the live browser URL by default. No LangGraph or separate LLM is required for this first workflow; consider orchestration tooling only once branching and durable resume justify it.

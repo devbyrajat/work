@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Profile &amp; Citizen Attributes — YojnaAgent</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/app.css">
+</head>
+<body data-page="profile" class="app-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <!-- ui:sidebar -->
+  <!-- ui:mobile-header -->
+  <main id="main" class="app-main max-w-5xl space-y-6" tabindex="-1">
+    <!-- ui:preview-notice -->
+    <div class="panel flex flex-col justify-between gap-4 p-4 sm:flex-row sm:items-center sm:p-6">
+      <div class="flex items-center gap-4">
+        <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary-navy font-headline text-headline-sm text-light-on-primary shadow-sm sm:h-16 sm:w-16" aria-hidden="true">DC</span>
+        <div><div class="flex flex-wrap items-center gap-2"><h1 class="font-headline text-headline-md text-primary-navy">Demo Citizen</h1><span class="badge">Example profile</span></div><p class="mt-1 text-body-sm text-text-secondary">Illustrative profile · Gorakhpur, Uttar Pradesh</p></div>
+      </div>
+      <button type="button" disabled class="primary-action self-start sm:self-auto" title="The sample profile is read-only">Saving not connected</button>
+    </div>
+
+    <section class="panel space-y-4 p-4 sm:p-6">
+      <div class="profile-section-header"><div><h2>Personal Details</h2><p>Sample attributes only. No identity verification is connected.</p></div><span class="material-symbols-outlined text-title-md text-text-secondary" aria-hidden="true">person</span></div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="profile-field">Display Label<input class="field" type="text" value="Demo Citizen" readonly></label>
+        <label class="profile-field">Age<input class="field" type="text" value="42 years (example)" readonly></label>
+        <label class="profile-field">Gender<select class="field" disabled><option>Not provided</option></select></label>
+        <label class="profile-field">Social Category<select class="field" disabled><option>Not provided</option></select></label>
+      </div>
+    </section>
+
+    <section class="panel space-y-4 p-4 sm:p-6">
+      <div class="profile-section-header"><div><h2>Occupation, Education &amp; Income</h2><p>Examples of fields an eligibility workflow may ask about when needed.</p></div><span class="material-symbols-outlined text-title-md text-text-secondary" aria-hidden="true">work</span></div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="profile-field">Primary Occupation<select class="field" disabled><option>Farmer / agricultural worker</option></select></label>
+        <label class="profile-field">Highest Education Level<select class="field" disabled><option>Higher Secondary (Class 12)</option></select></label>
+        <label class="profile-field">Annual Family Income Range<select class="field" disabled><option>Below ₹1,50,000 (example)</option></select></label>
+        <label class="profile-field">Agricultural Landholding<input class="field" type="text" value="Not provided" readonly></label>
+      </div>
+    </section>
+
+    <section class="panel space-y-4 p-4 sm:p-6">
+      <div class="profile-section-header"><div><h2>Location &amp; Residence</h2><p>An example of state and residence information.</p></div><span class="material-symbols-outlined text-title-md text-text-secondary" aria-hidden="true">location_on</span></div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <label class="profile-field">State / UT<select class="field" disabled><option>Uttar Pradesh</option></select></label>
+        <label class="profile-field">District<input class="field" type="text" value="Gorakhpur" readonly></label>
+        <label class="profile-field">Residence Setting<select class="field" disabled><option>Rural (Gram Panchayat)</option></select></label>
+      </div>
+    </section>
+
+    <section id="preferences" class="panel space-y-4 p-4 sm:p-6">
+      <div class="profile-section-header"><div><h2>Language &amp; Communication</h2><p>Settings are shown to preview the layout. This site sends no messages.</p></div><span class="material-symbols-outlined text-title-md text-text-secondary" aria-hidden="true">translate</span></div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="profile-field">Portal Interface Language<select class="field" disabled><option>English</option></select></label>
+        <label class="profile-field">SMS &amp; WhatsApp Alerts<select class="field" disabled><option>Not connected</option></select></label>
+      </div>
+    </section>
+
+    <section class="panel space-y-4 p-4 sm:p-6">
+      <div class="profile-section-header"><div><h2>Privacy &amp; Consent Controls</h2><p>This design preview does not ask for or store real profile information.</p></div><span class="material-symbols-outlined text-title-md text-success" aria-hidden="true">security</span></div>
+      <div class="space-y-3">
+        <label class="consent-control"><span><span class="block font-label text-label-md">Automatic Scheme Eligibility Matching</span><span class="block text-body-sm text-text-secondary">Not connected in this preview.</span></span><input type="checkbox" disabled class="h-4 w-4 shrink-0 rounded-sm border-light-outline"></label>
+        <label class="consent-control"><span><span class="block font-label text-label-md">DigiLocker Certificate Verification</span><span class="block text-body-sm text-text-secondary">Not connected. Do not upload or share certificates here.</span></span><input type="checkbox" disabled class="h-4 w-4 shrink-0 rounded-sm border-light-outline"></label>
+        <div class="consent-control"><div><div class="font-label text-label-md">Preview Data</div><p class="text-body-sm text-text-secondary">Only bookmarks of sample schemes may be stored in this browser.</p></div><a href="/#preview-privacy" class="font-label text-label-sm text-secondary-blue hover:underline">Preview privacy</a></div>
+      </div>
+    </section>
+  </main>
+  <!-- ui:mobile-nav -->
+</body>
+</html>

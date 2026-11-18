@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Scheme Assistant — YojnaAgent</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/app.css">
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body data-page="assistant" class="app-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <!-- ui:sidebar -->
+  <!-- ui:mobile-header -->
+  <main id="main" class="app-main flex max-w-4xl flex-col gap-6" tabindex="-1">
+    <!-- ui:preview-notice -->
+    <div class="panel flex flex-wrap items-center justify-between gap-4 p-4">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary-blue/10 text-secondary-blue"><span class="material-symbols-outlined text-title-md" aria-hidden="true">smart_toy</span></div>
+        <div>
+          <h1 class="font-headline text-title-md text-primary-navy">Eligibility Questionnaire</h1>
+          <p class="flex flex-wrap gap-x-2 text-body-sm text-text-secondary"><span>Example: Step 5 of 7</span><span class="font-medium text-secondary-blue">Residence &amp; work</span></p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="inline-flex rounded border border-light-outline bg-light-surface-variant p-0.5 font-label text-label-sm" aria-label="Preview language">
+          <span class="rounded-sm bg-light-surface px-2.5 py-1 font-semibold text-primary-navy shadow-sm">English</span>
+          <button type="button" lang="hi" disabled title="Hindi is not available in this preview" class="cursor-not-allowed px-2.5 py-1 text-text-secondary">हिंदी</button>
+        </div>
+        <button type="button" data-reset-demo class="secondary-action p-2" title="Reset example choices" aria-label="Reset example choices" hidden><span class="material-symbols-outlined text-title-sm" aria-hidden="true">restart_alt</span></button>
+      </div>
+    </div>
+
+    <div class="flex-1 space-y-6" data-demo-questionnaire>
+      <div class="flex items-start gap-3">
+        <span class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded bg-primary-navy text-amber-300 shadow-sm"><!-- ui:brand-icon --></span>
+        <div class="min-w-0 max-w-xl">
+          <p class="panel p-4 text-body-md text-text-primary">Namaste! I’m YojnaAgent. This is a sample conversation showing how the assistant will collect only the information it needs to find relevant schemes.</p>
+          <p class="mt-1 pl-1 text-label-sm text-text-secondary">YojnaAgent · Example message</p>
+        </div>
+      </div>
+
+      <div class="flex items-start justify-end gap-3">
+        <div class="min-w-0 max-w-md">
+          <p class="rounded-lg bg-primary-navy p-3.5 text-body-md text-light-on-primary shadow-sm">I am 42 years old, living in Uttar Pradesh (Gorakhpur district).</p>
+          <p class="mt-1 pr-1 text-right text-label-sm text-text-secondary">Demo citizen · Example answer</p>
+        </div>
+        <span aria-hidden="true" class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary-blue/10 font-label text-label-sm font-semibold text-secondary-blue">DC</span>
+      </div>
+
+      <div class="flex items-start gap-3">
+        <span class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded bg-primary-navy text-amber-300 shadow-sm"><!-- ui:brand-icon --></span>
+        <div class="min-w-0 w-full max-w-2xl">
+          <div class="panel space-y-4 p-4 text-body-md text-text-primary">
+            <p>What is your primary occupation and estimated annual household income? You can try the controls below. Don’t enter real personal information in this preview.</p>
+            <fieldset class="min-w-0">
+              <legend class="mb-2 font-label text-label-md">Select Occupation:</legend>
+              <div class="grid gap-2.5 sm:grid-cols-2">
+                <label class="relative cursor-pointer"><input class="peer sr-only" type="radio" name="demo-occupation" value="farmer" checked><span class="demo-option"><span><span class="block font-label text-label-md font-semibold">Farmer / Agricultural Worker</span><span class="block text-body-sm text-text-secondary">Cultivator, tenant farmer, dairy</span></span><span class="option-indicator" aria-hidden="true"></span></span></label>
+                <label class="relative cursor-pointer"><input class="peer sr-only" type="radio" name="demo-occupation" value="business"><span class="demo-option"><span><span class="block font-label text-label-md font-semibold">Small Business / MSME Owner</span><span class="block text-body-sm text-text-secondary">Shopkeeper, artisan, trader</span></span><span class="option-indicator" aria-hidden="true"></span></span></label>
+                <label class="relative cursor-pointer"><input class="peer sr-only" type="radio" name="demo-occupation" value="worker"><span class="demo-option"><span><span class="block font-label text-label-md font-semibold">Salaried / Private Worker</span><span class="block text-body-sm text-text-secondary">Gig worker, daily wage, formal</span></span><span class="option-indicator" aria-hidden="true"></span></span></label>
+                <label class="relative cursor-pointer"><input class="peer sr-only" type="radio" name="demo-occupation" value="student"><span class="demo-option"><span><span class="block font-label text-label-md font-semibold">Student / Job Seeker</span><span class="block text-body-sm text-text-secondary">Higher education, upskilling</span></span><span class="option-indicator" aria-hidden="true"></span></span></label>
+              </div>
+            </fieldset>
+            <div>
+              <label for="demo-income" class="mb-1.5 block font-label text-label-md">Annual Family Income Bracket:</label>
+              <select id="demo-income" class="field" aria-describedby="income-hint">
+                <option selected>Below ₹1,50,000</option><option>₹1,50,000 – ₹3,00,000</option><option>₹3,00,000 – ₹6,00,000</option><option>₹6,00,000 – ₹10,00,000</option><option>Above ₹10,00,000</option>
+              </select>
+              <p id="income-hint" class="mt-1 text-body-sm text-text-secondary">Example ranges only; these are not scheme thresholds.</p>
+            </div>
+            <fieldset class="min-w-0">
+              <legend class="mb-2 font-label text-label-md">Residence Type:</legend>
+              <div class="grid gap-2.5 sm:grid-cols-2">
+                <label class="relative cursor-pointer"><input class="peer sr-only" type="radio" name="demo-residence" value="rural" checked><span class="demo-option !justify-start"><span class="material-symbols-outlined text-title-md" aria-hidden="true">cabin</span><span><span class="block font-label text-label-md font-semibold">Rural (Gram Panchayat)</span><span class="block text-body-sm text-text-secondary">Example rural residence</span></span></span></label>
+                <label class="relative cursor-pointer"><input class="peer sr-only" type="radio" name="demo-residence" value="urban"><span class="demo-option !justify-start"><span class="material-symbols-outlined text-title-md" aria-hidden="true">apartment</span><span><span class="block font-label text-label-md font-semibold">Urban (Nagar Nigam)</span><span class="block text-body-sm text-text-secondary">Example urban residence</span></span></span></label>
+              </div>
+            </fieldset>
+            <div>
+              <label for="demo-education" class="mb-1.5 block font-label text-label-md">Education Level:</label>
+              <select id="demo-education" class="field"><option>Secondary (10th Pass)</option><option selected>Higher Secondary (12th Pass)</option><option>Graduate / Diploma</option><option>Post-Graduate</option><option>No Formal Education</option></select>
+            </div>
+          </div>
+          <p class="mt-1 pl-1 text-label-sm text-text-secondary">YojnaAgent · Example message</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col justify-between gap-3 border-t border-light-outline pt-4 sm:items-center xl:flex-row">
+      <div class="text-body-sm text-text-secondary"><p class="flex items-start gap-2"><span class="material-symbols-outlined mt-0.5 text-title-sm text-success" aria-hidden="true">lock</span><span>Example choices are not sent or used to check eligibility.</span></p><p data-reset-status role="status"></p></div>
+      <div class="flex flex-wrap gap-2 sm:flex-nowrap"><a href="/user-dashboard/UserDashboard.html" class="secondary-action grow whitespace-nowrap">Back to Dashboard</a><a href="/scheme-results/SchemeResults.html" class="primary-action grow whitespace-nowrap">View Example Results <span class="material-symbols-outlined text-title-sm" aria-hidden="true">arrow_forward</span></a></div>
+    </div>
+  </main>
+  <!-- ui:mobile-nav -->
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Application Tracker — YojnaAgent</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/src/app.css">
+</head>
+<body data-page="tracker" class="app-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <!-- ui:sidebar -->
+  <!-- ui:mobile-header -->
+  <main id="main" class="app-main max-w-7xl space-y-6" tabindex="-1">
+    <!-- ui:preview-notice -->
+    <div class="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+      <div>
+        <div class="mb-1 flex items-center gap-2 font-label text-label-sm text-text-secondary"><span class="material-symbols-outlined text-title-sm text-accent-gold" aria-hidden="true">timeline</span> Sample milestones · No portal sync</div>
+        <h1 class="font-headline text-headline-md text-primary-navy sm:text-headline-lg">Application Tracker</h1>
+        <p class="mt-1 text-body-md text-text-secondary">See how manual application tracking could look. No applications have been submitted by YojnaAgent.</p>
+      </div>
+      <button type="button" disabled class="secondary-action self-start lg:self-auto" title="This preview is not connected to any government portal"><span class="material-symbols-outlined text-title-sm" aria-hidden="true">refresh</span> Sync not connected</button>
+    </div>
+
+    <article class="panel space-y-6 p-4 sm:p-6">
+      <div class="flex flex-col justify-between gap-4 border-b border-light-outline pb-4 sm:flex-row sm:items-start">
+        <div>
+          <div class="mb-2 flex flex-wrap items-center gap-2"><span class="badge border-accent-gold/25 bg-accent-gold/10 text-accent-gold"><span class="material-symbols-outlined text-title-sm" aria-hidden="true">hourglass_top</span> Example: Awaiting Response</span><span class="text-label-sm text-text-secondary">Sample record A</span></div>
+          <h2 class="font-headline text-headline-sm text-primary-navy">PM Surya Ghar: Muft Bijli Yojana</h2>
+          <p class="text-body-sm text-text-secondary">Ministry of New &amp; Renewable Energy · Rooftop solar example</p>
+        </div>
+        <span class="badge self-start">Not a real application</span>
+      </div>
+      <div>
+        <h3 class="mb-4 font-label text-label-md font-semibold text-primary-navy">Lifecycle Progression</h3>
+        <ol class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <li class="milestone"><div class="milestone-step text-success">Step 1 <span class="material-symbols-outlined text-title-sm" aria-hidden="true">check_circle</span></div><h4>Interested</h4><p>Example bookmarked.</p></li>
+          <li class="milestone"><div class="milestone-step text-success">Step 2 <span class="material-symbols-outlined text-title-sm" aria-hidden="true">check_circle</span></div><h4>Preparing Documents</h4><p>Review the checklist.</p></li>
+          <li class="milestone"><div class="milestone-step text-success">Step 3 <span class="material-symbols-outlined text-title-sm" aria-hidden="true">check_circle</span></div><h4>Ready to Apply</h4><p>Confirm instructions.</p></li>
+          <li class="milestone"><div class="milestone-step text-success">Step 4 <span class="material-symbols-outlined text-title-sm" aria-hidden="true">check_circle</span></div><h4>Submitted</h4><p>Illustrative status.</p></li>
+          <li class="milestone border-accent-gold bg-accent-gold/10" aria-current="step"><div class="milestone-step text-accent-gold">Step 5 (Example) <span class="material-symbols-outlined text-title-sm" aria-hidden="true">hourglass_bottom</span></div><h4>Awaiting Response</h4><p>Check the official portal for your own status.</p></li>
+        </ol>
+      </div>
+      <div class="flex flex-col justify-between gap-4 rounded border border-light-outline bg-light-surface-variant p-4 sm:flex-row sm:items-center">
+        <div><h3 class="font-label text-label-md font-semibold text-primary-navy">Next step in this example</h3><p class="text-body-sm text-text-secondary">Look for updates on the scheme’s official portal. This page does not show inspection dates or government records.</p></div>
+        <a href="https://pmsuryaghar.gov.in/" target="_blank" rel="noopener noreferrer" class="primary-action shrink-0">Open Official Portal <span class="material-symbols-outlined text-title-sm" aria-hidden="true">open_in_new</span></a>
+      </div>
+    </article>
+
+    <article class="panel space-y-6 p-4 sm:p-6">
+      <div class="flex flex-col justify-between gap-4 border-b border-light-outline pb-4 sm:flex-row sm:items-start">
+        <div>
+          <div class="mb-2 flex flex-wrap items-center gap-2"><span class="badge text-success"><span class="material-symbols-outlined text-title-sm" aria-hidden="true">task_alt</span> Example: Preparing Documents</span><span class="text-label-sm text-text-secondary">Sample record B</span></div>
+          <h2 class="font-headline text-headline-sm text-primary-navy">PM-KISAN Samman Nidhi Yojana</h2>
+          <p class="text-body-sm text-text-secondary">Ministry of Agriculture &amp; Farmers Welfare · Farm income support example</p>
+        </div>
+        <a href="/scheme-details/SchemeDetails.html?scheme=pm-kisan" class="primary-action self-start">Read Scheme Details <span class="material-symbols-outlined text-title-sm" aria-hidden="true">arrow_forward</span></a>
+      </div>
+      <ol class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5" aria-label="Example milestones">
+        <li class="milestone"><div class="milestone-step text-success">Step 1 <span class="material-symbols-outlined text-title-sm" aria-hidden="true">check_circle</span></div><h3>Interested</h3><p>Example bookmarked.</p></li>
+        <li class="milestone border-primary-navy" aria-current="step"><div class="milestone-step text-primary-navy">Step 2 (Example) <span class="material-symbols-outlined text-title-sm" aria-hidden="true">play_circle</span></div><h3>Preparing Documents</h3><p><a href="/document-checker/DocumentChecker.html?scheme=pm-kisan" class="text-secondary-blue hover:underline">Open sample checklist</a></p></li>
+        <li class="milestone"><div class="milestone-step">Step 3 <span class="material-symbols-outlined text-title-sm" aria-hidden="true">radio_button_unchecked</span></div><h3>Ready to Apply</h3><p>Not started.</p></li>
+        <li class="milestone"><div class="milestone-step">Step 4 <span class="material-symbols-outlined text-title-sm" aria-hidden="true">radio_button_unchecked</span></div><h3>Submitted</h3><p>Not started.</p></li>
+        <li class="milestone"><div class="milestone-step">Step 5 <span class="material-symbols-outlined text-title-sm" aria-hidden="true">radio_button_unchecked</span></div><h3>Awaiting Response</h3><p>Not started.</p></li>
+      </ol>
+    </article>
+  </main>
+  <!-- ui:mobile-nav -->
+</body>
+</html>
